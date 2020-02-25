@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-public class User implements Serializable {
+public class User implements Serializable, Observer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -97,6 +97,7 @@ public class User implements Serializable {
         this.takenBooks = takenBooks;
     }
 
+    @Override
     public void update(String message) {
         System.out.println(this.firstName + this.lastName + " just received new message: [" + message + "]");
     }

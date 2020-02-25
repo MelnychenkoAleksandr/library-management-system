@@ -4,12 +4,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name = "books")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "reader"})
-public class Book implements Serializable {
+public class Book implements Serializable, Observable {
     private static final long serialVersionUID = -234567890765432L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,6 +30,9 @@ public class Book implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User reader;
+
+    @Transient
+    final List<Observer> observers = new LinkedList<>();
 
     public User getReader() {
         return reader;
@@ -87,6 +92,20 @@ public class Book implements Serializable {
 
     public void setAvailable(boolean available) {
         this.available = available;
+    }
+
+    @Override
+    public void addObserver(Observer o) {
+        observers.add(o);
+    }
+
+    @Override
+    public void removeObserver(Observer o) {
+        observers.remove(o);
+    }
+
+    public void notifyObservers(final String message) {
+        observers.forEach(o -> o.update(message));
     }
 
     @Override

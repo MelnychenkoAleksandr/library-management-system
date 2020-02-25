@@ -2,10 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>Person List</title>
+    <title>User Page</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
 </head>
 <body>
+<a th:href="@{/}">Go to main page.</a>
 <h1>You are logged as </h1>
 <h2 th:utext="${user.firstName}"></h2>
 <h2 th:utext="${user.lastName}"></h2>
@@ -44,7 +45,17 @@
             <td th:utext="${book.author}">...</td>
             <td th:utext="${book.isbn}">...</td>
             <td th:utext="${book.description}">...</td>
-            <td><a th:href="@{/user/{userId}/takebook(userId=${user.id}, bookId=${book.id})}">Take book</a></td>
+<!--            <td><a th:href="@{/user/{userId}/takebook(userId=${user.id}, bookId=${book.id})}">Take book</a></td>-->
+            <td>
+                <span th:if="${book.available}"><a th:href="@{/user/{userId}/takebook(userId=${user.id}, bookId=${book.id})}">Take book</a></span>
+                <span th:unless="${book.available}"><a th:href="@{/user/{userId}/notify(userId=${user.id}, bookId=${book.id})}">Notify when available</a></span>
+            </td>
+
+<!--            <td>-->
+<!--            /{userId}/notify-->
+<!--                <span th:if="${teacher.gender == 'F'}">Female</span>-->
+<!--                <span th:unless="${teacher.gender == 'F'}">Male</span>-->
+<!--            </td>-->
         </tr>
     </table>
 </div>

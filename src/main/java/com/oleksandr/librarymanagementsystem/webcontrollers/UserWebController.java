@@ -29,7 +29,7 @@ public class UserWebController {
 
     @GetMapping(value = "/{userid}", produces = MediaType.APPLICATION_JSON_VALUE)
     public String getUserById(@PathVariable("userid") String userId, Model model) {
-        model.addAttribute("books", bookRepository.findByAvailable(true));
+        model.addAttribute("books", bookRepository.findAll());
         model.addAttribute("user", userRepository.findById(Integer.parseInt(userId)).get());
         return "userPage";
     }
@@ -71,19 +71,20 @@ public class UserWebController {
             model.addAttribute("user", userRepository.findById(Integer.parseInt(userId)).get());
             bookRepository.save(book);
             userRepository.save(user);
-            return "userPage";
+            return "redirect:/user/"+userId;
         }
-        return "userPage";
+        return "redirect:/user/"+userId;
     }
 
     @GetMapping(value = "/{userId}/notify")
     public String addNotification(@PathVariable(value = "userId") String userId,
                                   @RequestParam(required = true) String bookId,
                                   Model model){
-
+        Book book = bookRepository.findById(Integer.parseInt(bookId)).get();
         User user = userRepository.findById(Integer.parseInt(userId)).get();
+        book.addObserver(user);
         notificationObserver.addObserver(user);
-        return "userPage";
+        return "redirect:/user/"+userId;
     }
 
     @GetMapping(value = "/{userId}/returnBook")
@@ -99,6 +100,7 @@ public class UserWebController {
             user.getTakenBooks().add(book);
             book.setAvailable(true);
             book.setReader(null);
+            book.notifyObservers("The book "+book.getName() + " is returned and you can take it.");
             notificationObserver.notifyUsers("The book "+book.getName() + " is returned and you can take it.");
             bookRepository.save(book);
             userRepository.save(user);
