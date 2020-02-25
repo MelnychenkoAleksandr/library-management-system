@@ -1,0 +1,52 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Person List</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<h1>You are logged as </h1>
+<h2 th:utext="${user.firstName}"></h2>
+<h2 th:utext="${user.lastName}"></h2>
+
+<div>
+    <h1>Taken books</h1>
+    <table border="1">
+        <tr>
+            <th>Book Name</th>
+            <th>Book author</th>
+            <th>ISBN</th>
+            <th>Description</th>
+        </tr>
+        <tr th:each="book : ${user.takenBooks}">
+            <td th:utext="${book.name}">...</td>
+            <td th:utext="${book.author}">...</td>
+            <td th:utext="${book.isbn}">...</td>
+            <td th:utext="${book.description}">...</td>
+            <td><a th:href="@{/user/{userId}/returnBook(userId=${user.id}, bookId=${book.id})}">return book</a></td>
+        </tr>
+    </table>
+</div>
+
+<div>
+    <h1> Available books:</h1>
+    <table border="1">
+        <tr>
+            <th>Book Name</th>
+            <th>Book author</th>
+            <th>ISBN</th>
+            <th>Description</th>
+            <th>Available</th>
+        </tr>
+        <tr th:each="book : ${books}">
+            <td th:utext="${book.name}">...</td>
+            <td th:utext="${book.author}">...</td>
+            <td th:utext="${book.isbn}">...</td>
+            <td th:utext="${book.description}">...</td>
+            <td><a th:href="@{/user/{userId}/takebook(userId=${user.id}, bookId=${book.id})}">Take book</a></td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

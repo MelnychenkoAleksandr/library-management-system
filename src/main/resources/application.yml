@@ -1,0 +1,53 @@
+spring:
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+  datasource:
+    #    url: jdbc:h2:file:/data/demo
+    url: jdbc:h2:mem:test
+    driverClassName: org.h2.Driver
+    username: sa
+    password: password
+    #  spring.datasource.url = jdbc:h2:file:/data/demo
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+  h2:
+    console:
+      enabled: true
+      path: /h2
+  thymeleaf:
+    template-loader-path: classpath:/templates
+    suffix: .html
+    cache: false
+
+management:
+
+  endpoints:
+    web:
+      path-mapping:
+        ping: /ping
+        info: /version
+
+      base-path: /stats
+      exposure:
+        include:
+          - ping
+          - all
+          - info
+
+server:
+  port: ${PORT:9000}
+
+
+#spring.thymeleaf.template-loader-path: classpath:/templates
+#spring.thymeleaf.suffix: .html
+#spring.thymeleaf.cache: false
+
+
+#spring.h2.console.enabled=true
+#spring.h2.console.path=/h2_console
+#spring.datasource.url=jdbc:h2:file:~/h2/testdb
+#spring.datasource.username=sa
+#spring.datasource.password=
+#spring.datasource.driverClassName=org.h2.Driver
+#spring.jpa.hibernate.ddl-auto=update
+#spring.jpa.show-sql=true
