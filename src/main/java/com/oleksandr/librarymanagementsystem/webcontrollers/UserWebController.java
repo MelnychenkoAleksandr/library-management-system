@@ -113,6 +113,8 @@ public class UserWebController {
     public String readBookOnline(@PathVariable(value = "userId") String userId,
                            @RequestParam(required = true) String bookId, Model model){
         com.oleksandr.librarymanagementsystem.models.Readable book = bookRepository.findById(Integer.parseInt(bookId)).get();
+        User reader = userRepository.findById(Integer.parseInt(userId)).get();
+        book.setReader(reader);
         book = new BookDecorator(book);
         book.read();
         return "redirect:/user/"+userId;
