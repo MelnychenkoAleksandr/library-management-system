@@ -25,13 +25,18 @@ public class AdminController {
     @GetMapping(value = "/addusers", produces = MediaType.APPLICATION_JSON_VALUE)
     public String addUsersToDB() {
         createListOfUsers().forEach(user -> userRepository.save(user));
-        return "Users are added.";
+        return "Users are added. ";
+    }
+
+    @GetMapping(value = "/addall", produces = MediaType.APPLICATION_JSON_VALUE)
+    public String addAll(){
+        return addBooksToDB() + addUsersToDB();
     }
 
     @GetMapping(value = "/addbooks", produces = MediaType.APPLICATION_JSON_VALUE)
     public String addBooksToDB() {
         buildTestBooks().forEach(book -> bookRepository.save(book));
-        return "Books are added.";
+        return "Books are added. ";
     }
 
     private List<Book> buildTestBooks() {

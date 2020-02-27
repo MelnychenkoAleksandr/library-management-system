@@ -36,7 +36,16 @@ public class UserWebController {
 
     @GetMapping(value = "/{userid}", produces = MediaType.APPLICATION_JSON_VALUE)
     public String getUserById(@PathVariable("userid") String userId, Model model) {
-        model.addAttribute("books", bookRepository.findAll());
+        User user = userRepository.findById(Integer.parseInt(userId)).get();
+        Iterable<Book> allBooks = bookRepository.findAll();
+        List<Book> takenBooks = user.getTakenBooks();
+        List<Book> notTakenBooks = new ArrayList<>();
+        for (Book book : allBooks) {
+            if (!takenBooks.contains(book)) {
+                notTakenBooks.add(book);
+            }
+        }
+        model.addAttribute("books", notTakenBooks);
         model.addAttribute("user", userRepository.findById(Integer.parseInt(userId)).get());
         return "userPage";
     }
@@ -78,67 +87,67 @@ public class UserWebController {
             model.addAttribute("user", userRepository.findById(Integer.parseInt(userId)).get());
             bookRepository.save(book);
             userRepository.save(user);
-            return "redirect:/user/"+userId;
+            return "redirect:/user/" + userId;
         }
-        return "redirect:/user/"+userId;
+        return "redirect:/user/" + userId;
     }
 
     @GetMapping(value = "/{userId}/notify")
     public String addNotification(@PathVariable(value = "userId") String userId,
                                   @RequestParam(required = true) String bookId,
-                                  Model model){
+                                  Model model) {
         Book book = bookRepository.findById(Integer.parseInt(bookId)).get();
         User user = userRepository.findById(Integer.parseInt(userId)).get();
         notificationRepository.save(new Notification(user.getId(), book.getId()));
         notificationObserver.addObserver(user);
-        return "redirect:/user/"+userId;
+        return "redirect:/user/" + userId;
     }
 
     @GetMapping(value = "/{userId}/readbook")
     public String readBook(@PathVariable(value = "userId") String userId,
-                           @RequestParam(required = true) String bookId, Model model){
+                           @RequestParam(required = true) String bookId, Model model) {
         User user = userRepository.findById(Integer.parseInt(userId)).get();
 
         List<Book> takenBooks = user.getTakenBooks();
 
-        takenBooks.forEach(book->{
-            if(book.getId().equals(Integer.parseInt(bookId))){
+        takenBooks.forEach(book -> {
+            if (book.getId().equals(Integer.parseInt(bookId))) {
                 book.read();
             }
         });
-        return "redirect:/user/"+userId;
+        return "redirect:/user/" + userId;
     }
 
     @GetMapping(value = "/{userId}/readonline")
     public String readBookOnline(@PathVariable(value = "userId") String userId,
-                           @RequestParam(required = true) String bookId, Model model){
+                                 @RequestParam(required = true) String bookId, Model model) {
         com.oleksandr.librarymanagementsystem.models.Readable book = bookRepository.findById(Integer.parseInt(bookId)).get();
         User reader = userRepository.findById(Integer.parseInt(userId)).get();
         book.setReader(reader);
         book = new BookDecorator(book);
         book.read();
-        return "redirect:/user/"+userId;
+        return "redirect:/user/" + userId;
     }
 
     @GetMapping(value = "/{userId}/returnBook")
     public String returnBook(@PathVariable(value = "userId") String userId,
-                           @RequestParam(required = true) String bookId, Model model) {
+                             @RequestParam(required = true) String bookId, Model model) {
         User user = userRepository.findById(Integer.parseInt(userId)).get();
         Book book = bookRepository.findById(Integer.parseInt(bookId)).get();
-        if(user==null) return "User does not exist.";
-        if(book==null) return "Book can't be found by id";
+        if (user == null) return "User does not exist.";
+        if (book == null) return "Book can't be found by id";
         if (user != null && book != null) {
             model.addAttribute("userId", user.getId());
             model.addAttribute("bookId", book.getId());
             user.getTakenBooks().add(book);
             book.setAvailable(true);
             book.setReader(null);
-            notificationObserver.notifyUsers("The book "+book.getName() + " is returned and you can take it.", book);
+            notificationObserver.notifyUsers("The book " + book.getName() + " is returned and you can take it.", book);
             bookRepository.save(book);
             userRepository.save(user);
-            return "redirect:/user/"+userId;
+            return "redirect:/user/" + userId;
         }
-        return "redirect:/user/"+userId;
+        return "redirect:/user/" + userId;
     }
 
     private boolean isUserExist(User newUser) {
