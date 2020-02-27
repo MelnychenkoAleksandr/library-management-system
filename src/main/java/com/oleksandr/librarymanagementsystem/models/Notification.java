@@ -9,18 +9,16 @@ public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
-    @Column(name = "user")
-    User user;
-    @Column(name = "book")
-    Book book;
+    @Column(name = "userId")
+    Integer userId;
+    @Column(name = "bookId")
+    Integer bookId;
 
-    public Notification(User user, Book book) {
-        this.user = user;
-        this.book = book;
-    }
+    public Notification(){}
 
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
+    public Notification(Integer userId, Integer bookId) {
+        this.userId = userId;
+        this.bookId = bookId;
     }
 
     public Integer getId() {
@@ -31,20 +29,20 @@ public class Notification {
         this.id = id;
     }
 
-    public User getUser() {
-        return user;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
-    public Book getBook() {
-        return book;
+    public Integer getBookId() {
+        return bookId;
     }
 
-    public void setBook(Book book) {
-        this.book = book;
+    public void setBookId(Integer bookId) {
+        this.bookId = bookId;
     }
 
     @Override
@@ -52,12 +50,12 @@ public class Notification {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Notification that = (Notification) o;
-        return user.equals(that.user) &&
-                book.equals(that.book);
+        return  Objects.equals(userId, that.userId) &&
+                Objects.equals(bookId, that.bookId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, user, book);
+        return Objects.hash(id, userId, bookId);
     }
 }

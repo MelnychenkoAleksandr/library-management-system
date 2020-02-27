@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -30,6 +28,18 @@ public class Book implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User reader;
+
+    public Book() {
+    }
+
+    public Book(Integer id, String name, String author, String isbn, String description) {
+        this.id = id;
+        this.name = name;
+        this.author = author;
+        this.isbn = isbn;
+        this.description = description;
+        this.available = true;
+    }
 
     public User getReader() {
         return reader;
@@ -116,5 +126,47 @@ public class Book implements Serializable {
                 ", description='" + description + '\'' +
                 ", available=" + available +
                 '}';
+    }
+
+    public static final class BookBuilder {
+
+        Integer id;
+        String name;
+        String author;
+        String isbn;
+        String description;
+
+        public static BookBuilder aBookBuilder() {
+            return new BookBuilder();
+        }
+
+        public BookBuilder withId(Integer id) {
+            this.id = id;
+            return this;
+        }
+
+        public BookBuilder withName(String drink) {
+            this.name = drink;
+            return this;
+        }
+
+        public BookBuilder withAuthor(String author) {
+            this.author = author;
+            return this;
+        }
+
+        public BookBuilder withISBN(String isbn) {
+            this.isbn = isbn;
+            return this;
+        }
+
+        public BookBuilder withDescription(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public Book build() {
+            return new Book(id, name, author, isbn, description);
+        }
     }
 }

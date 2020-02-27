@@ -8,6 +8,6 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.ArrayList;
 
 public interface NotificationRepository extends CrudRepository<Notification, Integer> {
-    ArrayList<Notification> findByBook(Book book);
-    ArrayList<Notification> findByUser(User user);
+    ArrayList<Notification> findByBookId(Integer bookId);
+    ArrayList<Notification> findByUserId(Integer userId);
 }

@@ -87,7 +87,7 @@ public class UserWebController {
                                   Model model){
         Book book = bookRepository.findById(Integer.parseInt(bookId)).get();
         User user = userRepository.findById(Integer.parseInt(userId)).get();
-        notificationRepository.save(new Notification(user, book));
+        notificationRepository.save(new Notification(user.getId(), book.getId()));
         notificationObserver.addObserver(user);
         return "redirect:/user/"+userId;
     }
