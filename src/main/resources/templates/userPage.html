@@ -19,6 +19,8 @@
             <th>Book author</th>
             <th>ISBN</th>
             <th>Description</th>
+            <th> Action </th>
+            <th>Read book</th>
         </tr>
         <tr th:each="book : ${user.takenBooks}">
             <td th:utext="${book.name}">...</td>
@@ -26,6 +28,7 @@
             <td th:utext="${book.isbn}">...</td>
             <td th:utext="${book.description}">...</td>
             <td><a th:href="@{/user/{userId}/returnBook(userId=${user.id}, bookId=${book.id})}">return book</a></td>
+            <td><a th:href="@{/user/{userId}/readbook(userId=${user.id}, bookId=${book.id})}">read book</a></td>
         </tr>
     </table>
 </div>
@@ -39,6 +42,7 @@
             <th>ISBN</th>
             <th>Description</th>
             <th>Available</th>
+            <th>Read Online</th>
         </tr>
         <tr th:each="book : ${books}">
             <td th:utext="${book.name}">...</td>
@@ -50,6 +54,7 @@
                 <span th:if="${book.available}"><a th:href="@{/user/{userId}/takebook(userId=${user.id}, bookId=${book.id})}">Take book</a></span>
                 <span th:unless="${book.available}"><a th:href="@{/user/{userId}/notify(userId=${user.id}, bookId=${book.id})}">Notify when available</a></span>
             </td>
+            <td><a th:href="@{/user/{userId}/readonline(userId=${user.id}, bookId=${book.id})}">Read online</a></td>
 
 <!--            <td>-->
 <!--            /{userId}/notify-->

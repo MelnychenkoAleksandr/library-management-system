@@ -9,7 +9,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "books")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "reader"})
-public class Book implements Serializable {
+public class Book implements Serializable, Readable {
     private static final long serialVersionUID = -234567890765432L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,6 +39,10 @@ public class Book implements Serializable {
         this.isbn = isbn;
         this.description = description;
         this.available = true;
+    }
+
+    public void read(){
+        System.out.println("The book is read: " + this.name + " by reader " + this.reader.getFirstName());
     }
 
     public User getReader() {

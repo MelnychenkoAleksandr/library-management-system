@@ -2,6 +2,7 @@ package com.oleksandr.librarymanagementsystem.webcontrollers;
 
 import com.oleksandr.librarymanagementsystem.controllers.NotificationObserver;
 import com.oleksandr.librarymanagementsystem.models.Book;
+import com.oleksandr.librarymanagementsystem.models.BookDecorator;
 import com.oleksandr.librarymanagementsystem.models.Notification;
 import com.oleksandr.librarymanagementsystem.models.User;
 import com.oleksandr.librarymanagementsystem.repositories.BookRepository;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("/user")
@@ -89,6 +91,30 @@ public class UserWebController {
         User user = userRepository.findById(Integer.parseInt(userId)).get();
         notificationRepository.save(new Notification(user.getId(), book.getId()));
         notificationObserver.addObserver(user);
+        return "redirect:/user/"+userId;
+    }
+
+    @GetMapping(value = "/{userId}/readbook")
+    public String readBook(@PathVariable(value = "userId") String userId,
+                           @RequestParam(required = true) String bookId, Model model){
+        User user = userRepository.findById(Integer.parseInt(userId)).get();
+
+        List<Book> takenBooks = user.getTakenBooks();
+
+        takenBooks.forEach(book->{
+            if(book.getId().equals(Integer.parseInt(bookId))){
+                book.read();
+            }
+        });
+        return "redirect:/user/"+userId;
+    }
+
+    @GetMapping(value = "/{userId}/readonline")
+    public String readBookOnline(@PathVariable(value = "userId") String userId,
+                           @RequestParam(required = true) String bookId, Model model){
+        com.oleksandr.librarymanagementsystem.models.Readable book = bookRepository.findById(Integer.parseInt(bookId)).get();
+        book = new BookDecorator(book);
+        book.read();
         return "redirect:/user/"+userId;
     }
 
