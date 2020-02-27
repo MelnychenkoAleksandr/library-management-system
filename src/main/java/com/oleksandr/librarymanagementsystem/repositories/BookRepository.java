@@ -8,6 +8,5 @@ import java.util.ArrayList;
 
 @Transactional
 public interface BookRepository extends CrudRepository<Book, Integer> {
-    ArrayList<Book> findByAvailable(boolean available)
-            ;
+    ArrayList<Book> findByAvailable(boolean available);
 }

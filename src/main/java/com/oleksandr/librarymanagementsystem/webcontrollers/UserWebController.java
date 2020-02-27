@@ -2,8 +2,10 @@ package com.oleksandr.librarymanagementsystem.webcontrollers;
 
 import com.oleksandr.librarymanagementsystem.controllers.NotificationObserver;
 import com.oleksandr.librarymanagementsystem.models.Book;
+import com.oleksandr.librarymanagementsystem.models.Notification;
 import com.oleksandr.librarymanagementsystem.models.User;
 import com.oleksandr.librarymanagementsystem.repositories.BookRepository;
+import com.oleksandr.librarymanagementsystem.repositories.NotificationRepository;
 import com.oleksandr.librarymanagementsystem.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -23,6 +25,9 @@ public class UserWebController {
 
     @Autowired
     private BookRepository bookRepository;
+
+    @Autowired
+    private NotificationRepository notificationRepository;
 
     @Autowired
     private NotificationObserver notificationObserver;
@@ -82,7 +87,7 @@ public class UserWebController {
                                   Model model){
         Book book = bookRepository.findById(Integer.parseInt(bookId)).get();
         User user = userRepository.findById(Integer.parseInt(userId)).get();
-        book.addObserver(user);
+        notificationRepository.save(new Notification(user, book));
         notificationObserver.addObserver(user);
         return "redirect:/user/"+userId;
     }
@@ -100,8 +105,7 @@ public class UserWebController {
             user.getTakenBooks().add(book);
             book.setAvailable(true);
             book.setReader(null);
-            book.notifyObservers("The book "+book.getName() + " is returned and you can take it.");
-            notificationObserver.notifyUsers("The book "+book.getName() + " is returned and you can take it.");
+            notificationObserver.notifyUsers("The book "+book.getName() + " is returned and you can take it.", book);
             bookRepository.save(book);
             userRepository.save(user);
             return "redirect:/user/"+userId;

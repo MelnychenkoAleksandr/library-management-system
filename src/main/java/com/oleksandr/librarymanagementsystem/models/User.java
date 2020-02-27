@@ -7,6 +7,7 @@ import java.util.Objects;
 
 @Entity
 public class User implements Serializable, Observer {
+    private static final long serialVersionUID = -234567897765432L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
