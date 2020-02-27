@@ -1,15 +1,15 @@
 package com.oleksandr.librarymanagementsystem.webcontrollers;
 
+import com.oleksandr.librarymanagementsystem.models.BlackCopier;
 import com.oleksandr.librarymanagementsystem.models.Book;
+import com.oleksandr.librarymanagementsystem.models.ColorCopier;
+import com.oleksandr.librarymanagementsystem.models.Copier;
 import com.oleksandr.librarymanagementsystem.repositories.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -44,6 +44,19 @@ public class BooksWebController {
         }
         book.setAvailable(true);
         bookRepository.save(book);
+        return "redirect:/book/getall";
+    }
+
+    @GetMapping(value = "/copybook")
+    public String copyBook(@RequestParam(required = true) String bookId, @RequestParam(required = true) String color) {
+        Copier copier;
+        if ("color".equals(color)) {
+            copier = new ColorCopier();
+        } else {
+            copier = new BlackCopier();
+        }
+        Book book = bookRepository.findById(Integer.parseInt(bookId)).get();
+        copier.copy(book);
         return "redirect:/book/getall";
     }
 
