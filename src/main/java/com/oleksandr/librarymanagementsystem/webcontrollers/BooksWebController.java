@@ -48,7 +48,7 @@ public class BooksWebController {
     }
 
     @GetMapping(value = "/copybook")
-    public String copyBook(@RequestParam(required = true) String bookId, @RequestParam(required = true) String color) {
+    public String copyBook(@RequestParam String bookId, @RequestParam String color) {
         Copier copier;
         if ("color".equals(color)) {
             copier = new ColorCopier();
@@ -62,8 +62,6 @@ public class BooksWebController {
 
     private boolean isBookExists(Book newBook) {
         Iterable<Book> books = bookRepository.findAll();
-        ArrayList<Book> bookList = new ArrayList<>();
-        books.forEach(b -> bookList.add(b));
         for (Book book : books) {
             if (newBook.equals(book)) return true;
         }

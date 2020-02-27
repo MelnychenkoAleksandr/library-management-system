@@ -63,7 +63,7 @@ public class UserWebController {
     }
 
     @PostMapping(value = "/adduser")
-    public String addUser(@Valid User user, Model model) {
+    public String addUser(@Valid User user) {
         if (isUserExist(user)) {
             return "User already exists.";
         }
@@ -73,7 +73,7 @@ public class UserWebController {
 
     @GetMapping(value = "/{userId}/takebook")
     public String addBookToUser(@PathVariable(value = "userId") String userId,
-                                @RequestParam(required = true) String bookId,
+                                @RequestParam String bookId,
                                 Model model) {
         User user = userRepository.findById(Integer.parseInt(userId)).get();
         Book book = bookRepository.findById(Integer.parseInt(bookId)).get();
@@ -94,8 +94,7 @@ public class UserWebController {
 
     @GetMapping(value = "/{userId}/notify")
     public String addNotification(@PathVariable(value = "userId") String userId,
-                                  @RequestParam(required = true) String bookId,
-                                  Model model) {
+                                  @RequestParam String bookId) {
         Book book = bookRepository.findById(Integer.parseInt(bookId)).get();
         User user = userRepository.findById(Integer.parseInt(userId)).get();
         notificationRepository.save(new Notification(user.getId(), book.getId()));
@@ -105,7 +104,7 @@ public class UserWebController {
 
     @GetMapping(value = "/{userId}/readbook")
     public String readBook(@PathVariable(value = "userId") String userId,
-                           @RequestParam(required = true) String bookId, Model model) {
+                           @RequestParam String bookId) {
         User user = userRepository.findById(Integer.parseInt(userId)).get();
 
         List<Book> takenBooks = user.getTakenBooks();
@@ -120,7 +119,7 @@ public class UserWebController {
 
     @GetMapping(value = "/{userId}/readonline")
     public String readBookOnline(@PathVariable(value = "userId") String userId,
-                                 @RequestParam(required = true) String bookId, Model model) {
+                                 @RequestParam String bookId) {
         com.oleksandr.librarymanagementsystem.models.Readable book = bookRepository.findById(Integer.parseInt(bookId)).get();
         User reader = userRepository.findById(Integer.parseInt(userId)).get();
         book.setReader(reader);
@@ -131,7 +130,7 @@ public class UserWebController {
 
     @GetMapping(value = "/{userId}/returnBook")
     public String returnBook(@PathVariable(value = "userId") String userId,
-                             @RequestParam(required = true) String bookId, Model model) {
+                             @RequestParam String bookId, Model model) {
         User user = userRepository.findById(Integer.parseInt(userId)).get();
         Book book = bookRepository.findById(Integer.parseInt(bookId)).get();
         if (user == null) return "User does not exist.";

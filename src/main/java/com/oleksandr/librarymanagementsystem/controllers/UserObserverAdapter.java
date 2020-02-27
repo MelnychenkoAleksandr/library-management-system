@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 public class UserObserverAdapter {
 
     public User getUser(Observer observer){
-        User user = (User) observer;
-        return user;
+        return (User) observer;
     }
 }

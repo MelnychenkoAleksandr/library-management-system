@@ -2,7 +2,7 @@ package com.oleksandr.librarymanagementsystem.models;
 
 public class BookDecorator implements Readable {
 
-    protected Readable readableBook;
+    protected final Readable readableBook;
     protected User reader;
 
     public BookDecorator(Readable readableBook) {
